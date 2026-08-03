@@ -11,5 +11,16 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 120_000,
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      testMatch: /site\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "mobile-webkit",
+      testMatch: /mobile-webkit\.spec\.ts/,
+      use: { ...devices["iPhone 13"] },
+    },
+  ],
 });

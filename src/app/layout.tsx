@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { createPersonJsonLd } from "@/content/person-json-ld";
 import { site } from "@/content/site";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 import "./globals.css";
 
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     apple: "/brand/apple-touch-icon-blue-j.png",
   },
   openGraph: { type: "website", siteName: site.name, locale: "en_US" },
-  twitter: { card: "summary" },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {
@@ -51,19 +52,24 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
+            __html: serializeJsonLd(personJsonLd),
           }}
         />
       </head>
       <body>
         <a
           href="#main-content"
+          data-skip-link
           className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-primary px-4 py-3 font-semibold text-background focus:translate-y-0"
         >
           Skip to content
         </a>
         <Header />
-        <main id="main-content" className="page-content" tabIndex={-1}>
+        <main
+          id="main-content"
+          className="page-content pt-[72px]"
+          tabIndex={-1}
+        >
           {children}
         </main>
         <Footer />

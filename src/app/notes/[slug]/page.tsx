@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { ContextualBackLink } from "@/components/ui/contextual-back-link";
+import { createArticleJsonLd } from "@/content/article-json-ld";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { getAllNotes, getNote } from "@/lib/notes";
 import { createMetadata } from "@/lib/metadata";
 
@@ -30,7 +32,10 @@ export async function generateMetadata({
   const note = await getNote(slug);
 
   return note
-    ? createMetadata(note.title, note.description, `/notes/${slug}`)
+    ? createMetadata(note.title, note.description, `/notes/${slug}`, {
+        type: "article",
+        publishedTime: note.publishedAt,
+      })
     : {};
 }
 
@@ -40,21 +45,16 @@ export default async function NotePage({ params }: NotePageProps) {
 
   if (!note) notFound();
 
+  const articleJsonLd = createArticleJsonLd(note);
+
   return (
     <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
+      />
       <header className="page-shell page-hero border-b border-border">
-        <Link
-          href="/notes"
-          className="group mb-8 inline-flex items-center gap-1 text-sm font-semibold text-accent-strong"
-        >
-          <span
-            aria-hidden="true"
-            className="transition-transform group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
-          >
-            ←
-          </span>
-          Engineering notes
-        </Link>
+        <ContextualBackLink href="/notes">Engineering notes</ContextualBackLink>
         <p className="eyebrow">{note.category}</p>
         <h1 className="max-w-5xl text-balance text-5xl font-semibold tracking-[-0.04em] sm:text-7xl">
           {note.title}

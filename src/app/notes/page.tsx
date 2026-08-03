@@ -10,21 +10,6 @@ export const metadata = createMetadata(
   "/notes",
 );
 
-const upcomingTopics = [
-  {
-    category: "AI engineering",
-    title: "Practical AI agents for engineering teams",
-    description:
-      "Where agents help, where deterministic tools remain better, and how to keep humans in control.",
-  },
-  {
-    category: "Testing",
-    title: "Testing large TypeScript applications",
-    description:
-      "Building coverage that improves release confidence without turning the test suite into a bottleneck.",
-  },
-];
-
 const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
@@ -79,26 +64,6 @@ export default async function NotesPage() {
               </p>
             </article>
           ))}
-        </div>
-
-        <div className="mt-20 border-t border-border pt-10">
-          <p className="eyebrow">In progress</p>
-          <h2 className="max-w-2xl text-3xl font-semibold">
-            The next topics in the queue.
-          </h2>
-          <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
-            {upcomingTopics.map((topic) => (
-              <article key={topic.title} className="bg-surface p-6 sm:p-8">
-                <p className="font-mono text-xs uppercase tracking-wider text-accent-strong">
-                  {topic.category}
-                </p>
-                <h3 className="mt-3 text-xl font-semibold">{topic.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-secondary">
-                  {topic.description}
-                </p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
     </>

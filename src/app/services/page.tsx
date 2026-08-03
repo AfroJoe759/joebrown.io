@@ -1,3 +1,4 @@
+import { ServiceCard } from "@/components/content/service-card";
 import { PageIntro } from "@/components/layout/page-intro";
 import { ButtonLink } from "@/components/ui/button-link";
 import { services } from "@/content/services";
@@ -20,38 +21,7 @@ export default function ServicesPage() {
       <section className="page-shell pb-24">
         <div className="divide-y divide-border border-y border-border">
           {services.map((service, index) => (
-            <article
-              key={service.title}
-              className="grid gap-8 py-12 lg:grid-cols-[4rem_1fr_1fr]"
-            >
-              <p className="font-mono text-sm text-accent-strong">
-                0{index + 1}
-              </p>
-              <div>
-                <h2 className="text-2xl font-semibold">{service.title}</h2>
-                <p className="mt-3 max-w-xl leading-7 text-secondary">
-                  {service.summary}
-                </p>
-              </div>
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <h3 className="text-sm font-semibold">Problems</h3>
-                  <ul className="mt-3 space-y-2 text-sm text-secondary">
-                    {service.problems.map((problem) => (
-                      <li key={problem}>{problem}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold">Deliverables</h3>
-                  <ul className="mt-3 space-y-2 text-sm text-secondary">
-                    {service.deliverables.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
+            <ServiceCard key={service.title} index={index} service={service} />
           ))}
         </div>
         <div className="mt-24 grid gap-16 lg:grid-cols-2">

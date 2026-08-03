@@ -5,7 +5,6 @@ const experienceSchema = z.object({
   role: z.string(),
   dates: z.string(),
   location: z.string(),
-  current: z.boolean(),
   summary: z.string().min(20),
   focus: z.array(z.string()).min(1),
   impactGroups: z
@@ -13,19 +12,13 @@ const experienceSchema = z.object({
       z.object({
         title: z.string().min(1),
         highlights: z.array(z.string()).min(1),
-        relatedNotes: z
-          .array(
-            z.object({
-              title: z.string().min(1),
-              href: z.string().startsWith("/notes/"),
-            }),
-          )
-          .optional(),
       }),
     )
     .min(1),
   technologies: z.array(z.string()).min(1),
 });
+
+export type ExperienceEntry = z.infer<typeof experienceSchema>;
 
 export const experience = z.array(experienceSchema).parse([
   {
@@ -33,7 +26,6 @@ export const experience = z.array(experienceSchema).parse([
     role: "Senior Software Engineer",
     dates: "January 2026 to present",
     location: "Remote",
-    current: true,
     summary:
       "I lead full-stack product and platform work across workflow automation, developer productivity, performance, security, and delivery infrastructure.",
     focus: [
@@ -51,17 +43,6 @@ export const experience = z.array(experienceSchema).parse([
           "Led the migration of presence detection from Ably to Firebase, reducing annual infrastructure costs by approximately 95% and establishing a migration strategy adopted by additional teams.",
           "Led internationalization for one of Zapier’s largest repositories, extracting more than 15,000 user-facing strings and introducing the product’s first scalable translation workflow with Lokalize.",
           "Automated production deployment pipelines across multiple services, eliminating manual releases and improving deployment consistency.",
-        ],
-        relatedNotes: [
-          {
-            title: "How barrel files slow down TypeScript builds",
-            href: "/notes/typescript-barrel-files-performance",
-          },
-          {
-            title:
-              "How switching from Ably to Firebase cut real-time infrastructure costs by 95%",
-            href: "/notes/ably-to-firebase-cost-savings",
-          },
         ],
       },
       {
@@ -96,7 +77,6 @@ export const experience = z.array(experienceSchema).parse([
     role: "Software Engineer II",
     dates: "August 2022 to January 2026",
     location: "Redmond, Washington · Remote",
-    current: false,
     summary:
       "I led product, developer-tooling, test-automation, and accessibility initiatives for Power Platform and Copilot Studio.",
     focus: [
@@ -146,7 +126,6 @@ export const experience = z.array(experienceSchema).parse([
     role: "Software Engineer",
     dates: "May 2020 to August 2022",
     location: "Bellevue, Washington · Remote",
-    current: false,
     summary:
       "I built product features and test infrastructure for Power Automate, focusing on collaboration, regression detection, and engineering ownership.",
     focus: ["Power Automate", "Product engineering", "Testing infrastructure"],
@@ -181,7 +160,6 @@ export const experience = z.array(experienceSchema).parse([
     role: "Software Engineer",
     dates: "December 2018 to February 2020",
     location: "Warren, Michigan",
-    current: false,
     summary:
       "I developed monitoring, computer-vision, and delivery infrastructure for the Department of Defense’s Next Generation Combat Vehicle program.",
     focus: ["Network monitoring", "Video systems", "Delivery infrastructure"],

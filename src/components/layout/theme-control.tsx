@@ -67,6 +67,7 @@ export function ThemeControl() {
   return (
     <button
       type="button"
+      data-theme-control
       onClick={toggleTheme}
       className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border bg-surface text-primary transition-colors hover:border-accent"
       aria-label={theme ? `Switch to ${nextTheme} mode` : "Toggle color theme"}

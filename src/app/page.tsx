@@ -1,71 +1,16 @@
 import Link from "next/link";
 
 import { DeliveryFlow } from "@/components/content/delivery-flow";
+import { ImpactMetricGroup } from "@/components/content/impact-metric-group";
 import { ImpactNumber } from "@/components/content/impact-number";
 import { ProjectCard } from "@/components/content/project-card";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { experience } from "@/content/experience";
+import { conversationTopics, impactMetrics } from "@/content/home";
 import { projects } from "@/content/projects";
 import { services } from "@/content/services";
 import { getAllNotes } from "@/lib/notes";
-
-const impactMetrics: Array<{
-  value: number;
-  prefix?: string;
-  suffix?: string;
-  label: string;
-  detail: string;
-  prominence: "primary" | "supporting";
-}> = [
-  {
-    value: 1000000,
-    suffix: "+",
-    label: "monthly active users",
-    detail:
-      "Implemented collaborative automation sharing in Power Automate with TypeScript, React, C#, and .NET.",
-    prominence: "primary",
-  },
-  {
-    value: 95,
-    suffix: "%",
-    label: "infrastructure savings",
-    detail:
-      "Moved presence detection from Ably to Firebase and documented a migration path reused by other teams.",
-    prominence: "primary",
-  },
-  {
-    value: 72,
-    suffix: "%",
-    label: "lower CI costs",
-    detail:
-      "Reduced average pipeline spend through dynamic test selection, sharding, incremental builds, and caching.",
-    prominence: "supporting",
-  },
-  {
-    value: 3,
-    suffix: "×",
-    label: "faster rebuilds",
-    detail:
-      "Made local and CI rebuilds three times faster in Zapier’s largest Next.js and TypeScript application.",
-    prominence: "supporting",
-  },
-  {
-    value: 15000,
-    suffix: "+",
-    label: "strings internationalized",
-    detail:
-      "Extracted user-facing copy, introduced an i18n layer, and connected the repository to Lokalize.",
-    prominence: "supporting",
-  },
-  {
-    value: 11,
-    label: "services brought into compliance",
-    detail:
-      "Brought 11 production services beyond minimum compliance requirements within one month.",
-    prominence: "supporting",
-  },
-];
 
 const primaryMetrics = impactMetrics.filter(
   (metric) => metric.prominence === "primary",
@@ -73,12 +18,6 @@ const primaryMetrics = impactMetrics.filter(
 const supportingMetrics = impactMetrics.filter(
   (metric) => metric.prominence === "supporting",
 );
-
-const conversationTopics = [
-  "Product architecture",
-  "Developer productivity",
-  "Practical AI integrations",
-];
 
 export default async function HomePage() {
   const notes = await getAllNotes();
@@ -123,50 +62,54 @@ export default async function HomePage() {
             title="Product adoption, delivery speed, and operating cost."
             description="Selected results from workflow products, CI performance, infrastructure migrations, internationalization, and security compliance."
           />
-          <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-border bg-border lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-            <dl className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-1">
-              {primaryMetrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="flex min-h-64 flex-col justify-end bg-background p-6 sm:p-8 lg:min-h-72"
-                >
-                  <dt className="order-2 mt-2 text-lg font-semibold">
-                    {metric.label}
-                  </dt>
-                  <dd className="order-1 text-5xl font-semibold tracking-[-0.05em] text-accent-strong sm:text-6xl lg:text-7xl">
-                    <ImpactNumber
-                      value={metric.value}
-                      prefix={metric.prefix}
-                      suffix={metric.suffix}
-                    />
-                  </dd>
-                  <dd className="order-3 mt-3 max-w-md text-sm leading-6 text-secondary">
-                    {metric.detail}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <dl className="grid gap-px bg-border sm:grid-cols-2">
-              {supportingMetrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="flex flex-col bg-background p-6 sm:p-8"
-                >
-                  <dt className="order-2 mt-2 font-semibold">{metric.label}</dt>
-                  <dd className="order-1 text-3xl font-semibold tracking-[-0.04em] text-accent-strong sm:text-4xl">
-                    <ImpactNumber
-                      value={metric.value}
-                      prefix={metric.prefix}
-                      suffix={metric.suffix}
-                    />
-                  </dd>
-                  <dd className="order-3 mt-3 text-sm leading-6 text-secondary">
-                    {metric.detail}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <ImpactMetricGroup>
+            <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-border bg-border lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+              <dl className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-1">
+                {primaryMetrics.map((metric) => (
+                  <div
+                    key={metric.label}
+                    className="flex min-h-64 flex-col justify-end bg-background p-6 sm:p-8 lg:min-h-72"
+                  >
+                    <dt className="order-2 mt-2 text-lg font-semibold">
+                      {metric.label}
+                    </dt>
+                    <dd className="order-1 text-5xl font-semibold tracking-[-0.05em] text-accent-strong sm:text-6xl lg:text-7xl">
+                      <ImpactNumber
+                        value={metric.value}
+                        prefix={metric.prefix}
+                        suffix={metric.suffix}
+                      />
+                    </dd>
+                    <dd className="order-3 mt-3 max-w-md text-sm leading-6 text-secondary">
+                      {metric.detail}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <dl className="grid gap-px bg-border sm:grid-cols-2">
+                {supportingMetrics.map((metric) => (
+                  <div
+                    key={metric.label}
+                    className="flex flex-col bg-background p-6 sm:p-8"
+                  >
+                    <dt className="order-2 mt-2 font-semibold">
+                      {metric.label}
+                    </dt>
+                    <dd className="order-1 text-3xl font-semibold tracking-[-0.04em] text-accent-strong sm:text-4xl">
+                      <ImpactNumber
+                        value={metric.value}
+                        prefix={metric.prefix}
+                        suffix={metric.suffix}
+                      />
+                    </dd>
+                    <dd className="order-3 mt-3 text-sm leading-6 text-secondary">
+                      {metric.detail}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </ImpactMetricGroup>
         </div>
       </section>
       <section className="page-shell section-space">

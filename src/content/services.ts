@@ -7,6 +7,8 @@ const serviceSchema = z.object({
   deliverables: z.array(z.string()).min(1),
 });
 
+export type Service = z.infer<typeof serviceSchema>;
+
 export const services = z.array(serviceSchema).parse([
   {
     title: "Product and full-stack development",
