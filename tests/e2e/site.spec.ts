@@ -1,12 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test("browser icon uses the content-hashed J asset", async ({ page }) => {
+test("browser icon uses the branded J asset", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
     "href",
-    /^\/icon\.png\?[a-f0-9]+$/,
+    "/brand/favicon-blue-j.png",
   );
 });
 
