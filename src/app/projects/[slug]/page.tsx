@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { ContextualBackLink } from "@/components/ui/contextual-back-link";
 import { Tag } from "@/components/ui/tag";
 import { projects } from "@/content/projects";
 import { createMetadata } from "@/lib/metadata";
@@ -28,6 +29,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <article>
       <header className="page-shell page-hero">
+        <ContextualBackLink href="/projects">All projects</ContextualBackLink>
         <p className="eyebrow">
           {project.type} · {project.status}
         </p>

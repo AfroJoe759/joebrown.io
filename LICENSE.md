@@ -21,8 +21,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-The MIT License does not apply to personal writing, résumé content, photography,
-logos, or other media under `src/content/notes`, `public/documents`, and
-`public/images`. Those materials remain copyright Joe Brown, all rights
-reserved, unless a file states otherwise. Employer and third-party names and
-trademarks remain the property of their respective owners.
+The MIT License applies to the application source code, but not to Joe Brown's
+authored text and data under `src/content`, résumé files under
+`public/documents`, photography and project imagery under `public/images`, or
+logos and branded assets under `public/brand`. Those materials remain copyright
+Joe Brown, all rights reserved, unless a file states otherwise. Employer and
+third-party names and trademarks remain the property of their respective
+owners.

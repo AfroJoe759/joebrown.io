@@ -8,7 +8,7 @@ import { contactNavigationItem, primaryNavigation } from "@/content/navigation";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-[72px] max-w-shell items-center gap-5 px-5 sm:px-8">
         <Link
           href="/"

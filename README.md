@@ -24,8 +24,9 @@ dependencies. Commit the resulting `package-lock.json` changes.
 
 ## Configuration
 
-The application works with the public defaults in `src/content/site.ts`. For
-local or deployed overrides, copy `.env.example` to `.env.local` and configure:
+The application works with the public defaults in `src/content/site-values.ts`.
+For local or deployed overrides, copy `.env.example` to `.env.local` and
+configure:
 
 | Variable                    | Purpose                                                   |
 | --------------------------- | --------------------------------------------------------- |
@@ -50,6 +51,7 @@ committed as the configuration contract.
 | `npm run typecheck`        | Run strict TypeScript checks                             |
 | `npm test`                 | Run Vitest unit and component tests                      |
 | `npm run test:e2e`         | Run Playwright browser tests on port 4173                |
+| `npm run audit`            | Fail on high- or critical-severity dependency findings   |
 | `npm run capture:projects` | Refresh project previews from the server on port 8000    |
 | `npm run validate`         | Run formatting, lint, types, tests, and production build |
 
@@ -59,10 +61,10 @@ the development server is active.
 
 ## Browser Test Setup
 
-Install Chromium once on each development machine:
+Install Chromium and WebKit once on each development machine:
 
 ```bash
-npx playwright install chromium
+npx playwright install chromium webkit
 ```
 
 Then run:
@@ -93,6 +95,7 @@ src/
 ├── content/             Typed site data and Markdown engineering notes
 └── lib/                 Shared non-UI helpers
 public/
+├── brand/               Browser and touch icons
 ├── documents/           Public downloads
 └── images/
     ├── profile/         Profile photography
@@ -112,7 +115,7 @@ Components are imported directly. Do not introduce barrel files.
 | `/projects`        | Project and case-study index                            |
 | `/projects/[slug]` | Statically generated case study                         |
 | `/services`        | Consulting capabilities and engagement process          |
-| `/notes`           | Engineering Notes roadmap and future content index      |
+| `/notes`           | Published engineering notes and investigations          |
 | `/contact`         | Direct contact and professional profiles                |
 
 The resume is a direct static download at
@@ -147,6 +150,23 @@ imply employer endorsement.
 - CSS custom properties provide light and dark design tokens
 - Explicit theme choices persist in local storage
 - Security headers are configured in `next.config.ts`
+
+## Security
+
+The site has no authentication, database, contact-form backend, or runtime CMS.
+Markdown content is local and raw HTML is disabled. The production Content
+Security Policy permits inline framework scripts and styles to preserve static
+rendering; replacing them with per-request nonces would make these pages dynamic.
+Revisit that tradeoff before introducing user-generated content, third-party
+scripts, or server-side mutations.
+
+See [SECURITY.md](SECURITY.md) for private vulnerability reporting and the
+current security model.
+
+Dependabot tracks dependency and GitHub Actions updates. Security patches
+should be applied promptly; framework and toolchain major versions should be
+upgraded in isolated pull requests so migrations and regressions remain easy to
+review.
 
 ## Debugging
 

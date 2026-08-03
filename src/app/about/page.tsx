@@ -11,14 +11,26 @@ export const metadata = createMetadata(
 );
 
 const interests = [
-  "AI-powered products and developer tools",
-  "Developer productivity and internal platforms",
-  "Backend systems and APIs",
-  "Workflow automation",
-  "Performance optimization",
-  "System design and architecture",
-  "Testing and engineering quality",
-  "Modern web applications",
+  {
+    title: "Product and AI",
+    description:
+      "Workflow automation, practical AI experiences, and modern applications people can trust in production.",
+  },
+  {
+    title: "Platforms and APIs",
+    description:
+      "Backend systems, service integrations, and internal platforms that give teams clear ownership.",
+  },
+  {
+    title: "Delivery and performance",
+    description:
+      "Build systems, CI/CD, and runtime improvements that shorten feedback loops without weakening quality.",
+  },
+  {
+    title: "Architecture and quality",
+    description:
+      "System design, accessibility, testing, and engineering practices that make software safer to change.",
+  },
 ];
 
 export default function AboutPage() {
@@ -47,7 +59,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <section className="my-20 grid items-center gap-10 border-y border-border py-12 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-16">
+        <section className="my-14 grid items-center gap-10 border-y border-border py-10 sm:my-20 sm:py-12 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-16">
           <figure>
             <div className="overflow-hidden rounded-2xl border border-border bg-surface">
               <Image
@@ -86,7 +98,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="py-8">
+        <section className="py-6 sm:py-8">
           <div className="max-w-article">
             <p className="eyebrow">What I enjoy building</p>
             <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -97,13 +109,22 @@ export default function AboutPage() {
               keep my attention.
             </p>
           </div>
-          <ul className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
             {interests.map((interest, index) => (
-              <li key={interest} className="bg-surface p-6">
-                <span className="font-mono text-xs text-accent-strong">
-                  0{index + 1}
-                </span>
-                <p className="mt-4 font-semibold leading-6">{interest}</p>
+              <li key={interest.title} className="bg-surface p-6 sm:p-8">
+                <div className="flex items-start gap-5">
+                  <span className="font-mono text-xs text-accent-strong">
+                    0{index + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-semibold leading-6">
+                      {interest.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-secondary">
+                      {interest.description}
+                    </p>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
@@ -115,7 +136,7 @@ export default function AboutPage() {
           </p>
         </section>
 
-        <section className="grid gap-12 py-20 lg:grid-cols-2 lg:gap-20">
+        <section className="grid gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-20">
           <div className="prose-custom">
             <h2>Beyond writing code</h2>
             <p>

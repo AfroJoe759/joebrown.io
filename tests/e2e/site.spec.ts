@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+import { publicRoutes } from "./public-routes";
+
 test("browser icon uses the branded J asset", async ({ page }) => {
   await page.goto("/");
 
@@ -40,6 +42,23 @@ test("published engineering notes are readable", async ({ page }) => {
       name: "Benchmark before changing the repository",
     }),
   ).toBeVisible();
+  await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+    "content",
+    "article",
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    "content",
+    "summary_large_image",
+  );
+  const jsonLdEntries = await page
+    .locator('script[type="application/ld+json"]')
+    .allTextContents();
+  expect(
+    jsonLdEntries.some(
+      (entry) =>
+        (JSON.parse(entry) as { "@type"?: string })["@type"] === "TechArticle",
+    ),
+  ).toBe(true);
 });
 
 test("legacy engineering note URLs redirect permanently", async ({
@@ -88,21 +107,8 @@ test("project previews follow the selected theme", async ({ page }) => {
   await expect(darkPreview).toBeVisible();
 });
 
-const accessibilityRoutes = [
-  "/",
-  "/projects",
-  "/projects/personal-website",
-  "/experience",
-  "/services",
-  "/notes",
-  "/notes/ably-to-firebase-cost-savings",
-  "/notes/typescript-barrel-files-performance",
-  "/about",
-  "/contact",
-];
-
 for (const theme of ["light", "dark"] as const) {
-  for (const path of accessibilityRoutes) {
+  for (const path of publicRoutes) {
     test(`${path} has no detectable accessibility violations in ${theme} mode`, async ({
       page,
     }) => {
@@ -113,7 +119,7 @@ for (const theme of ["light", "dark"] as const) {
       await page.goto(path);
       await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       const results = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();
 
       expect(
@@ -124,19 +130,35 @@ for (const theme of ["light", "dark"] as const) {
   }
 }
 
-test("mobile navigation provides an explicit close action", async ({
+test("mobile navigation isolates the page and closes after navigation", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
 
-  const menuButton = page.getByRole("button", { name: "Menu" });
+  const menuButton = page.getByRole("button", { name: "Open navigation" });
   await menuButton.click();
-  const dialog = page.getByRole("dialog", { name: "Site navigation" });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "Close menu" }).click();
-  await expect(dialog).toBeHidden();
-  await expect(menuButton).toBeFocused();
+  const navigation = page.getByRole("navigation", {
+    name: "Mobile navigation",
+  });
+  await expect(navigation).toBeVisible();
+  await expect(page.locator("main")).toHaveAttribute("inert", "");
+  await expect(navigation.getByRole("link", { name: "Home" })).toBeFocused();
+
+  const themeControl = page.getByRole("button", { name: /Switch to .* mode/ });
+  const initialTheme = await page.locator("html").getAttribute("data-theme");
+  await themeControl.click();
+  await expect(page.locator("html")).not.toHaveAttribute(
+    "data-theme",
+    initialTheme ?? "",
+  );
+  await expect(navigation).toBeVisible();
+  await expect(page.locator("main")).toHaveAttribute("inert", "");
+
+  await navigation.getByRole("link", { name: "Projects" }).click();
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(navigation).toBeHidden();
+  await expect(page.locator("main")).not.toHaveAttribute("inert", "");
 });
 
 test("desktop navigation is reachable and visibly focused by keyboard", async ({
@@ -192,22 +214,65 @@ test("mobile navigation supports a complete keyboard focus cycle", async ({
     await page.keyboard.press("Tab");
   }
 
-  const menuButton = page.getByRole("button", { name: "Menu" });
+  const menuButton = page.getByRole("button", { name: "Open navigation" });
   await expect(menuButton).toBeFocused();
   await page.keyboard.press("Enter");
 
-  const dialog = page.getByRole("dialog", { name: "Site navigation" });
-  await expect(dialog.getByRole("link", { name: "Projects" })).toBeFocused();
+  const navigation = page.getByRole("navigation", {
+    name: "Mobile navigation",
+  });
+  await expect(navigation.getByRole("link", { name: "Home" })).toBeFocused();
 
   await page.keyboard.press("Shift+Tab");
   await expect(
-    dialog.getByRole("button", { name: "Close menu" }),
+    page.getByRole("button", { name: "Close navigation" }),
   ).toBeFocused();
   await page.keyboard.press("Shift+Tab");
-  await expect(dialog.getByRole("link", { name: "Contact" })).toBeFocused();
+  await expect(page.getByRole("button", { name: /mode/ })).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(navigation.getByRole("link", { name: "Contact" })).toBeFocused();
 
   await page.keyboard.press("Escape");
-  await expect(menuButton).toBeFocused();
+  await expect(
+    page.getByRole("button", { name: "Open navigation" }),
+  ).toBeFocused();
+});
+
+test("experience entries expose details on request", async ({ page }) => {
+  await page.goto("/experience");
+
+  const zapierEntry = page.getByRole("button", {
+    name: /Zapier Senior Software Engineer/,
+  });
+  const panelId = await zapierEntry.getAttribute("aria-controls");
+  const panel = page.locator(`#${panelId}`);
+  await expect(zapierEntry).toHaveAttribute("aria-expanded", "false");
+  await expect(panel).toHaveAttribute("aria-hidden", "true");
+  await expect(panel).toHaveCSS("opacity", "0");
+
+  await zapierEntry.click();
+  await expect(zapierEntry).toHaveAttribute("aria-expanded", "true");
+  await expect(panel).toHaveAttribute("aria-hidden", "false");
+  await expect(panel).toHaveCSS("opacity", "1");
+  await expect(page.getByText("Selected impact").first()).toBeVisible();
+});
+
+test("services collapse into readable mobile disclosures", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/services");
+
+  const service = page.getByRole("button", {
+    name: /01 Product and full-stack development/,
+  });
+  await expect(service).toHaveAttribute("aria-expanded", "false");
+  await service.click();
+  await expect(service).toHaveAttribute("aria-expanded", "true");
+  await expect(
+    page.getByRole("heading", { name: "Problems" }).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Deliverables" }).first(),
+  ).toBeVisible();
 });
 
 test("navigation identifies the current page", async ({ page }) => {
