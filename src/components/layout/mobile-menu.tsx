@@ -103,7 +103,7 @@ export function MobileMenu() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="group flex min-h-16 items-center justify-between px-3 py-4 text-lg font-semibold transition-colors hover:bg-elevated focus-visible:bg-elevated aria-[current=page]:bg-surface aria-[current=page]:text-accent-strong"
+                  className="group flex min-h-16 items-center justify-between px-3 py-4 text-lg font-semibold hover:bg-elevated focus-visible:bg-elevated aria-[current=page]:bg-surface aria-[current=page]:text-accent-strong"
                 >
                   {link.label}
                   <span
